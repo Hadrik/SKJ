@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config>
+    <login>jirina_bohdalova</login>
+<!--    <url>http://localhost:8080/</url>-->
+    <url>http://158.196.171.206:8080/</url>
+</config>
