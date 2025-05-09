@@ -1,0 +1,109 @@
+{% extends 'core/base.html' %}
+{% block title %}Tweet | Y - The nothing app{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Tweet -->
+        <div class="card mb-4">
+            <div class="card-body tweet-card">
+                <div class="d-flex">
+                    <a href="{% url 'profile' tweet.author.username %}" class="me-2">
+                        <img src="{{ tweet.author.profile.profile_picture.url }}" alt="{{ tweet.author.username }}" class="rounded-circle" width="50">
+                    </a>
+                    <div>
+                        <h5 class="mb-0">
+                            <a href="{% url 'profile' tweet.author.username %}" class="text-decoration-none">{{ tweet.author.username }}</a>
+                        </h5>
+                        <p class="text-muted mb-2">@{{ tweet.author.username }} · {{ tweet.created_at|date:"j. n. Y H:i" }}</p>
+                        <p>{{ tweet.content }}</p>
+                        
+                        {% if tweet.image %}
+                        <div class="mt-2 mb-3">
+                            <img src="{{ tweet.image.url }}" alt="Tweet image" class="img-fluid rounded">
+                        </div>
+                        {% endif %}
+                        
+                        <div class="tweet-actions">
+                            <span>
+                                <i class="far fa-comment"></i> {{ tweet.comments_count }}
+                            </span>
+                            <form method="POST" action="{% url 'like_toggle' tweet.pk 'tweet' %}" style="display: inline;" class="ms-2">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link text-decoration-none p-0 m-0 align-baseline">
+                                    {% if user in tweet.likes.all %}
+                                    <i class="fas fa-heart text-danger"></i>
+                                    {% else %}
+                                    <i class="far fa-heart"></i>
+                                    {% endif %}
+                                    {{ tweet.likes_count }}
+                                </button>
+                            </form>
+                            <a href="{% url 'tweet_delete' tweet.pk %}" class="btn btn-link text-decoration-none p-0 m-0 align-baseline">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulář pro komentář -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Přidat komentář</h5>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.content }}
+                    </div>
+                    <button type="submit" class="btn btn-primary float-end">
+                        <i class="fas fa-reply"></i> Odpovědět
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Komentáře -->
+        <h4 class="mb-3">Komentáře ({{ comments.count }})</h4>
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <a href="{% url 'profile' comment.author.username %}" class="me-2">
+                            <img src="{{ comment.author.profile.profile_picture.url }}" alt="{{ comment.author.username }}" class="rounded-circle" width="40">
+                        </a>
+                        <div>
+                            <h6 class="mb-0">
+                                <a href="{% url 'profile' comment.author.username %}" class="text-decoration-none">{{ comment.author.username }}</a>
+                            </h6>
+                            <p class="text-muted mb-2">@{{ comment.author.username }} · {{ comment.created_at|date:"j. n. Y H:i" }}</p>
+                            <p>{{ comment.content }}</p>
+                            
+                            <div class="tweet-actions">
+                                <form method="POST" action="{% url 'like_toggle' comment.pk 'comment' %}" style="display: inline;" class="ms-2">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link text-decoration-none p-0 m-0 align-baseline">
+                                        {% if user in comment.likes.all %}
+                                        <i class="fas fa-heart text-danger"></i>
+                                        {% else %}
+                                        <i class="far fa-heart"></i>
+                                        {% endif %}
+                                        {{ comment.likes.count }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="alert alert-info">
+            Zatím nejsou žádné komentáře k tomuto tweetu.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

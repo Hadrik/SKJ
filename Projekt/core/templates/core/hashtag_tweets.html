@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+{% block title %}#{{ hashtag.name }} | Y - The nothing app{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h3 class="mb-4">#{{ hashtag.name }}</h3>
+        <p class="text-muted mb-4">{{ hashtag.tweets_count }} tweetů</p>
+        
+        {% if tweets %}
+            {% for tweet in tweets %}
+            <div class="card mb-3">
+                <div class="card-body tweet-card">
+                    <div class="d-flex">
+                        <a href="{% url 'profile' tweet.author.username %}" class="me-2">
+                            <img src="{{ tweet.author.profile.profile_picture.url }}" alt="{{ tweet.author.username }}" class="rounded-circle" width="50">
+                        </a>
+                        <div>
+                            <h5 class="mb-0">
+                                <a href="{% url 'profile' tweet.author.username %}" class="text-decoration-none">{{ tweet.author.username }}</a>
+                            </h5>
+                            <p class="text-muted mb-2">@{{ tweet.author.username }} · {{ tweet.created_at|date:"j. n. Y H:i" }}</p>
+                            <p>{{ tweet.content }}</p>
+                            
+                            {% if tweet.image %}
+                            <div class="mt-2 mb-3">
+                                <img src="{{ tweet.image.url }}" alt="Tweet image" class="img-fluid rounded">
+                            </div>
+                            {% endif %}
+                            
+                            <div class="tweet-actions">
+                                <a href="{% url 'tweet_detail' tweet.pk %}" class="text-decoration-none">
+                                    <i class="far fa-comment"></i> {{ tweet.comments_count }}
+                                </a>
+                                <form method="POST" action="{% url 'like_toggle' tweet.pk 'tweet' %}" style="display: inline;" class="ms-2">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link text-decoration-none p-0 m-0 align-baseline">
+                                        {% if user in tweet.likes.all %}
+                                        <i class="fas fa-heart text-danger"></i>
+                                        {% else %}
+                                        <i class="far fa-heart"></i>
+                                        {% endif %}
+                                        {{ tweet.likes_count }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="alert alert-info">
+            Zatím nejsou žádné tweety s tímto hashtagem.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

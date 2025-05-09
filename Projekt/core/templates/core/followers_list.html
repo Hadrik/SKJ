@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+{% block title %}Sledující - {{ profile_user.username }} - Y - The nothing app{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    <a href="{% url 'profile' profile_user.username %}" class="text-decoration-none">
+                        <i class="fas fa-arrow-left me-2"></i>
+                    </a>
+                    Sledující uživatele {{ profile_user.username }}
+                </h2>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if followers %}
+                    {% for user in followers %}
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}" 
+                                         class="rounded-circle" width="50" height="50">
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h5 class="mb-0">
+                                        <a href="{% url 'profile' user.username %}" class="text-decoration-none">
+                                            {{ user.username }}
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted mb-0">{{ user.profile.bio|truncatechars:50 }}</p>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item text-center py-3">
+                        <p class="text-muted mb-0">{{ profile_user.username }} zatím nemá žádné sledující.</p>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

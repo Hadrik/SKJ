@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Cvika/.idea/SKJ.iml" filepath="$PROJECT_DIR$/Cvika/.idea/SKJ.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SKJ-projekt.iml" filepath="$PROJECT_DIR$/.idea/SKJ-projekt.iml" />
     </modules>
   </component>
 </project>

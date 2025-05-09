@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% block title %}Smazat tweet - Y - The nothing app{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h2 class="card-title"><i class="fas fa-trash-alt"></i> Smazat tweet</h2>
+            </div>
+            <div class="card-body">
+                <p>Opravdu chcete smazat tento tweet?</p>
+                <blockquote class="blockquote">
+                    <p class="mb-3">{{ tweet.content }}</p>
+                    <footer class="blockquote-footer">{{ tweet.author.username }}, <cite>{{ tweet.created_at|date:"d.m.Y H:i" }}</cite></footer>
+                </blockquote>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'tweet_detail' tweet.id %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Zrušit
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Smazat
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

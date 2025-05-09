@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Y - The nothing app{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome pro ikony -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Vlastní CSS -->
+    <style>
+        body {
+            padding-top: 5rem;
+            background-color: #f5f8fa;
+        }
+        .navbar {
+            background-color: #1DA1F2;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white;
+        }
+        .navbar-brand:hover, .navbar-nav .nav-link:hover {
+            color: #f5f8fa;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .tweet-card {
+            padding: 15px;
+            border-bottom: 1px solid #e6ecf0;
+        }
+        .tweet-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #657786;
+        }
+        .tweet-actions a {
+            color: #657786;
+            text-decoration: none;
+        }
+        .tweet-actions a:hover {
+            color: #1DA1F2;
+        }
+        .profile-header {
+            background-color: #1DA1F2;
+            color: white;
+            padding: 30px 15px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+        }
+        .notification-badge {
+            position: relative;
+            top: -10px;
+            left: -5px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigační lišta -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'timeline' %}">
+                <i class="fab fa-twitter" style="transform: rotate(180deg)"></i> Y - The nothing app
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'timeline' %}">
+                            <i class="fas fa-home"></i> Domů
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'search' %}">
+                            <i class="fas fa-search"></i> Vyhledat
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notifications' %}">
+                            <i class="fas fa-bell"></i> Oznámení
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' user.username %}">
+                            <i class="fas fa-user"></i> Profil
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link nav-link">
+                                <i class="fas fa-sign-out-alt"></i> Odhlásit
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt"></i> Přihlásit
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">
+                            <i class="fas fa-user-plus"></i> Registrovat
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hlavní obsah -->
+    <main class="container mt-4">
+        <!-- Zprávy a upozornění -->
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Obsah stránky -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-muted py-3 mt-5">
+        <div class="container">
+            <p>Y - The nothing app &copy; 2025</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Vlastní JavaScript -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
