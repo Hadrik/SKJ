@@ -181,11 +181,11 @@ class Notification(models.Model):
     
     def __str__(self):
         if self.notification_type == 'like' and self.tweet:
-            return f"{self.sender.username} liked your yeet"
+            return f"{self.sender.username} liked your tweet"
         if self.notification_type == 'like' and self.comment:
             return f"{self.sender.username} liked your comment"
         elif self.notification_type == 'comment':
-            return f"{self.sender.username} commented on your yeet"
+            return f"{self.sender.username} commented on your tweet"
         elif self.notification_type == 'follow':
             return f"{self.sender.username} started following you"
         else:

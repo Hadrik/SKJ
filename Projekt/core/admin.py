@@ -40,17 +40,25 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'content_type', 'content_owner', 'created_at')
+    list_display = ('user', 'content_type', 'content_owner', 'content_preview', 'created_at')
     list_filter = ('created_at',)
     date_hierarchy = 'created_at'
     
     def content_type(self, obj):
         return 'Tweet' if obj.tweet else 'Comment'
+    content_type.short_description = 'Type'
     
     def content_owner(self, obj):
         if obj.tweet:
             return obj.tweet.author.username
         return obj.comment.author.username
+    content_owner.short_description = 'Owner'
+
+    def content_preview(self, obj):
+        if obj.tweet:
+            return obj.tweet.content[:50] + ('...' if len(obj.tweet.content) > 50 else '')
+        return obj.comment.content[:50] + ('...' if len(obj.content) > 50 else '')
+    content_preview.short_description = 'Content'
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)

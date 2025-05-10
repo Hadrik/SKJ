@@ -216,24 +216,8 @@ def like_toggle(request, pk, content_type):
         # Ještě nemá like - přidat
         if content_type == 'tweet':
             like = Like(user=request.user, tweet=obj)
-            # Vytvoření notifikace pro autora tweetu (pokud není přihlášený uživatel)
-            if obj.author != request.user:
-                Notification.objects.create(
-                    recipient=obj.author,
-                    sender=request.user,
-                    notification_type='like',
-                    tweet=obj
-                )
         else:
             like = Like(user=request.user, comment=obj)
-            # Vytvoření notifikace pro autora komentáře (pokud není přihlášený uživatel)
-            if obj.author != request.user:
-                Notification.objects.create(
-                    recipient=obj.author,
-                    sender=request.user,
-                    notification_type='like',
-                    comment=obj
-                )
         like.save()
     
     return redirect(request.META.get('HTTP_REFERER', 'timeline'))
